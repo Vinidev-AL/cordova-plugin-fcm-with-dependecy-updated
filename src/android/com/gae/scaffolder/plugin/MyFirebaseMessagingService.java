@@ -1,17 +1,16 @@
 package com.gae.scaffolder.plugin;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.util.Log;
-import java.util.Map;
-import java.util.HashMap;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import android.util.Log;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.salesforce.marketingcloud.MarketingCloudSdk;
+import com.salesforce.marketingcloud.messages.push.PushMessageManager;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -20,8 +19,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         super.onNewToken(token);
-        Log.d(TAG, "New token: " + token);
+        Log.d(TAG, "New Firebase token: " + token);
         FCMPlugin.sendTokenRefresh(token);
+        MarketingCloudSdk.requestSdk(marketingCloudSdk -> marketingCloudSdk.getPushMessageManager().setPushToken(token));
     }
 
     /**
@@ -29,19 +29,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      *
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
      */
-    // [START receive_message]
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // TODO(developer): Handle FCM messages here.
-        // If the application is in the foreground handle both data and notification messages here.
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
         Log.d(TAG, "==> MyFirebaseMessagingService onMessageReceived");
-        
-        if(remoteMessage.getNotification() != null){
-            Log.d(TAG, "\tNotification Title: " + remoteMessage.getNotification().getTitle());
-            Log.d(TAG, "\tNotification Message: " + remoteMessage.getNotification().getBody());
-        }
         
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("wasTapped", false);
@@ -56,9 +46,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "\tKey: " + key + " Value: " + value);
             data.put(key, value);
         }
-        
+
         Log.d(TAG, "\tNotification Data: " + data.toString());
-        FCMPlugin.sendPushPayload(data);
+        if(PushMessageManager.isMarketingCloudPush(remoteMessage)){
+            MarketingCloudSdk.requestSdk(marketingCloudSdk -> marketingCloudSdk.getPushMessageManager().handleMessage(remoteMessage));
+    } else {
+      FCMPlugin.sendPushPayload(data);
     }
-    // [END receive_message]
+  }
+
 }

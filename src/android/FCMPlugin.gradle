@@ -29,6 +29,11 @@ buildscript {
             google()
         }
     }
+    //test mabs 10
+    //plugins {
+      // Add the dependency for the Google services Gradle plugin
+      //id("com.google.gms.google-services") version "4.3.4" apply false
+    //}
     dependencies {
         // Load system enviroment defined values, or, if unavailable, plugin defaults
         def ANDROID_GOOGLE_SERVICES_VERSION = System.getenv('ANDROID_GOOGLE_SERVICES_VERSION') ?: '4.3.4'
@@ -64,8 +69,19 @@ repositories {
     if (gradleNumberVersion >= 3.4f) {
         google()
     }
+    maven { url "https://salesforce-marketingcloud.github.io/MarketingCloudSDK-Android/repository" }
 }
+//test mabs 10
+//plugins {
+  // Add the Google services Gradle plugin
+  //id("com.google.gms.google-services")
+//}
 dependencies {
+    implementation "com.salesforce.marketingcloud:marketingcloudsdk:7.4.2"
+
+    //test PB e DM Mabs 10
+    //implementation "com.google.firebase:firebase-core:9.6.1"
+    
     // Load system enviroment defined values, or, if unavailable, plugin defaults
     def ANDROID_FCM_VERSION = System.getenv('ANDROID_FCM_VERSION') ?: '21.0.0'
     def ANDROID_FIREBASE_BOM_VERSION = System.getenv('ANDROID_FIREBASE_BOM_VERSION') ?: '26.0.0'
@@ -104,8 +120,10 @@ dependencies {
         implementation "com.google.firebase:firebase-messaging"
     }
 }
-// apply plugin: 'com.google.gms.google-services'
+
+
+//apply plugin: 'com.google.gms.google-services'
 // class must be used instead of id(string) to be able to apply plugin from non-root gradle file
 if (!project.plugins.hasPlugin('com.google.gms.google-services')) {
-    apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
+   apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
 }
