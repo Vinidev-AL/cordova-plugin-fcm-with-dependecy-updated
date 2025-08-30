@@ -15,9 +15,9 @@ Pod::Spec.new do |spec|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  spec.name         = "cordova-plugin-fcm-with-dependecy-updated"
-  spec.version      = "7.8.0"
-  spec.summary      = "Google FCM Push Notifications Cordova Plugin"
+  spec.name         = "cordova-plugin-fcm-updated-2025"
+  spec.version      = "8.0.0"
+  spec.summary      = "Google FCM Push Notifications Cordova Plugin - 2025 Updated"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -139,7 +139,7 @@ DESC
   # spec.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   spec.dependency "Cordova", ">= 3.0.0"
 
-  # TODO: Migrate to use Core cocoapods Firebase dependencies
-  spec.dependency 'Firebase/Messaging'
+  # Updated Firebase dependencies for modern iOS versions
+  spec.dependency 'Firebase/Messaging', '~> 10.0'
 
 end
